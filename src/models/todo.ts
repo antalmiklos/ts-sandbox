@@ -41,6 +41,12 @@ const saveTodosToFile = (items: todo[], fname: string = "todos.json"): void => {
 }
 
 export const filterTodos = <Key extends keyof todo>(items: todo[], key: Key, value: string | number | boolean, strict: boolean = false): todo[] => {
+    if (key == "id") {
+        value = Number(value)
+    }
+    if (key == "done") {
+        value = Boolean(value)
+    }
     return items.filter((i) => {
         if (!strict) {
             if (typeof i[key] == "string") {
@@ -48,7 +54,7 @@ export const filterTodos = <Key extends keyof todo>(items: todo[], key: Key, val
                 return o.includes(String(value))
             }
         }
-        return i[key] === value as typeof i[Key]
+        return i[key] == value as typeof i[Key]
     })
 }
 
