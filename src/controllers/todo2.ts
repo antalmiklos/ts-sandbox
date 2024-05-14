@@ -1,7 +1,7 @@
 import { filterTodos, newTodo, readTodosFromFile, todo, updateTodo } from "../models/todo"
 import { Request, Response } from "express"
 
-export const createTodo = (req: Request, res: Response) => {
+const createTodo = (req: Request, res: Response) => {
     const payload = req.body as todo
     try {
         res.json(newTodo(payload))
@@ -10,7 +10,7 @@ export const createTodo = (req: Request, res: Response) => {
     }
 }
 
-export const getTodos = (req: Request, res: Response) => {
+const getTodos = (req: Request, res: Response) => {
     try {
         res.json(readTodosFromFile())
     } catch (error) {
@@ -18,7 +18,7 @@ export const getTodos = (req: Request, res: Response) => {
     }
 }
 
-export const getTodoById = (req: Request, res: Response) => {
+const getTodoById = (req: Request, res: Response) => {
     try {
         const id = Number(req.params["id"])
         const item = filterTodos(readTodosFromFile(), "id", id)[0]
@@ -32,7 +32,7 @@ export const getTodoById = (req: Request, res: Response) => {
     }
 }
 
-export const editTodo = (req: Request, res: Response) => {
+const editTodo = (req: Request, res: Response) => {
     try {
         const id = Number(req.params["id"])
         const payload = req.body as todo
@@ -48,7 +48,7 @@ export const editTodo = (req: Request, res: Response) => {
     }
 }
 
-export const searchTodo = <Key extends keyof todo>(req: Request, res: Response) => {
+const searchTodo = <Key extends keyof todo>(req: Request, res: Response) => {
     try {
         const searchKey = req.params["key"] as Key
         const searchVal = req.params["value"]
