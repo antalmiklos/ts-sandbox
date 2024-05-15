@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import * as fs from 'fs';
 import { todo } from 'node:test';
+import getDatabase from '../database/database';
 
 export type todo = {
     id: number,
@@ -21,13 +22,11 @@ const sortTodos = (items: todo[]): todo[] => {
 }
 
 export const getAllTodos = async (): Promise<todo[]> => {
-    const db = new PrismaClient()
-    return db.todos.findMany()
+    return getDatabase().todos.findMany()
 }
 
 export const searchTodos = async (query: object): Promise<todo[]> => {
-    const db = new PrismaClient()
-    return db.todos.findMany({
+    return getDatabase().todos.findMany({
         where: query,
         orderBy: {
             id: "asc"
@@ -36,8 +35,7 @@ export const searchTodos = async (query: object): Promise<todo[]> => {
 }
 
 export const getTodo = async (id: number): Promise<todo> => {
-    const db = new PrismaClient()
-    return db.todos.findFirstOrThrow({
+    return getDatabase().todos.findFirstOrThrow({
         where: {id: id},
     })
 }
@@ -46,8 +44,7 @@ export const updateTodo = (item: todo) => {
     if (item.id == 0) {
         throw new Error("can not update without id");
     }
-    const db = new PrismaClient()
-    return db.todos.update({
+    return getDatabase().todos.update({
         data: {...item, updatedAt: new Date(), id: item.id},
         where: {
             id: item.id
@@ -95,10 +92,9 @@ const cleanPayload = (pl: Prisma.todosCreateInput): Prisma.todosCreateInput =>  
 }
 
 export const newTodo = async (item: Prisma.todosCreateInput): Promise<todo> => {
-    const db = new PrismaClient()
     validatePayload(item)
     item = cleanPayload(item)
-    return db.todos.create({
+    return getDatabase().todos.create({
         data: {...item, createdAt: new Date(), updatedAt: new Date()}
     })
 }
